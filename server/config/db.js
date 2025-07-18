@@ -10,7 +10,7 @@ const pool = mysql.createPool({
 });
 
 pool.query('SELECT 1')
-  .then(() => console.log('✅ MySQL DB connected successfully!'))
-  .catch((err) => console.error('❌ MySQL connection failed:', err));
+  .then(() => console.log(' MySQL DB connected successfully!'))
+  .catch((err) => console.error(' MySQL connection failed:', err));
 
 export default pool;

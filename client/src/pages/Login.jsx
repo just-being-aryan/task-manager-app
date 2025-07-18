@@ -1,59 +1,40 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser, clearError } from '../redux/slices/authSlice';
+import { addNotification } from '../redux/slices/uiSlice';
 
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { loading, error } = useSelector((state) => state.auth);
+  
   const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    setIsLoading(true);
+    dispatch(clearError());
     
     try {
-      // Make actual API call to login
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: form.email,
-          password: form.password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
-      }
-
-      // Set the token in context and localStorage
-      login(data.token);
+      const result = await dispatch(loginUser({
+        email: form.email,
+        password: form.password,
+      }));
       
-      console.log('Login successful!');
-      alert('Login successful!');
-      navigate('/dashboard');
-    } catch (err) {
-      // Handle different types of errors
-      if (err.name === 'TypeError' && err.message.includes('fetch')) {
-        setError('Unable to connect to server. Please make sure the server is running on port 5000.');
-      } else if (err.message.includes('Failed to fetch')) {
-        setError('Network error. Please check your connection and ensure the server is running.');
-      } else {
-        setError(err.message || 'Login failed!');
+      if (loginUser.fulfilled.match(result)) {
+        dispatch(addNotification({
+          type: 'success',
+          message: 'Login successful!',
+        }));
+        navigate('/dashboard');
       }
-    } finally {
-      setIsLoading(false);
+    } catch (err) {
+      // Error handling is done in the slice
+      console.error('Login failed:', err);
     }
   };
 
@@ -108,7 +89,7 @@ export default function Login() {
                   value={form.email}
                   onChange={handleChange}
                   placeholder="Enter your email address"
-                  disabled={isLoading}
+                  disabled={loading}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-4">
                   <div className="w-2 h-2 bg-violet-500 rounded-full opacity-50"></div>
@@ -130,7 +111,7 @@ export default function Login() {
                   value={form.password}
                   onChange={handleChange}
                   placeholder="Enter your password"
-                  disabled={isLoading}
+                  disabled={loading}
                 />
                 <button
                   type="button"
@@ -155,11 +136,11 @@ export default function Login() {
             {/* Submit button */}
             <button
               type="button"
-              disabled={isLoading}
+              disabled={loading}
               onClick={handleSubmit}
               className="w-full bg-gradient-to-r from-violet-600 to-purple-700 hover:from-violet-700 hover:to-purple-800 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-violet-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:shadow-none"
             >
-              {isLoading ? (
+              {loading ? (
                 <div className="flex items-center justify-center space-x-3">
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                   <span>Signing in...</span>
@@ -177,7 +158,7 @@ export default function Login() {
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
           </div>
 
-          {/* Social login buttons */}
+          {/* Social login buttons (onlt for the UI) */}
           <div className="space-y-3">
             <button
               type="button"

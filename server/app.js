@@ -23,7 +23,7 @@ const authLimiter = rateLimit({
   },
 });
 
-app.use('/api/auth', authLimiter); // Apply only to /auth
+app.use('/api/auth', authLimiter); 
 
 
 // Routes

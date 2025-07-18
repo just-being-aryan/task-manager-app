@@ -19,7 +19,7 @@ export const protect = asyncHandler(async (req, res, next) => {
         throw new ApiError(401, 'User not found');
       }
 
-      req.user = rows[0]; // Attach user data to request
+      req.user = rows[0]; 
       next();
     } catch (error) {
       throw new ApiError(401, 'Invalid or expired token');
