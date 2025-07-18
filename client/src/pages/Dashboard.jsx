@@ -101,6 +101,9 @@ const Dashboard = () => {
   
   const { token, logout } = useAuth();
   const navigate = useNavigate();
+  
+  // API URL from environment
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
   // Fetch tasks function
   const fetchTasks = async () => {
@@ -108,7 +111,7 @@ const Dashboard = () => {
       setLoading(true);
       setError(null);
       
-      const res = await axios.get('http://localhost:5000/api/tasks', {
+      const res = await axios.get(`${API_BASE_URL}/tasks`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -147,7 +150,7 @@ const Dashboard = () => {
       
       console.log('Formatted task data:', taskData);
       
-      const res = await axios.post('http://localhost:5000/api/tasks', taskData, {
+      const res = await axios.post(`${API_BASE_URL}/tasks`, taskData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -188,7 +191,7 @@ const Dashboard = () => {
       
       console.log('Updating task with data:', taskData);
       
-      const res = await axios.put(`http://localhost:5000/api/tasks/${currentTask.id}`, taskData, {
+      const res = await axios.put(`${API_BASE_URL}/tasks/${currentTask.id}`, taskData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -217,7 +220,7 @@ const Dashboard = () => {
     }
     
     try {
-      const res = await axios.delete(`http://localhost:5000/api/tasks/${taskId}`, {
+      const res = await axios.delete(`${API_BASE_URL}/tasks/${taskId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -259,7 +262,7 @@ const Dashboard = () => {
       console.log('Current task status (raw):', currentStatus);
       console.log('Task object:', task);
       
-      const res = await axios.put(`http://localhost:5000/api/tasks/${taskId}`, 
+      const res = await axios.put(`${API_BASE_URL}/tasks/${taskId}`, 
         taskData,
         {
           headers: {
