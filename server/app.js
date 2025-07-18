@@ -9,7 +9,14 @@ import { ApiError } from './utils/apiError.js';
 import { errorMiddleware } from './middleware/errorMiddleware.js';
 const app = express();
 
+// const corsOptions = {
+//   origin: process.env.CLIENT_URL,
+//   credentials: true,
+// };
+
+
 app.use(cors());
+
 app.use(express.json());
 
 
