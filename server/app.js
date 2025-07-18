@@ -9,13 +9,15 @@ import { ApiError } from './utils/apiError.js';
 import { errorMiddleware } from './middleware/errorMiddleware.js';
 const app = express();
 
-// const corsOptions = {
-//   origin: process.env.CLIENT_URL,
-//   credentials: true,
-// };
+const corsOptions = {
+  origin: [
+    'https://task-manager-app-iota-three.vercel.app', // Vercel frontend
+    'http://localhost:5173', // Optional: local dev
+  ],
+  credentials: true,
+};
 
-
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
