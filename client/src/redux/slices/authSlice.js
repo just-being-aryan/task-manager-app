@@ -30,9 +30,14 @@ export const loginUser = createAsyncThunk(
       console.error('Error response:', error.response);
       console.error('Error status:', error.response?.status);
       console.error('Error data:', error.response?.data);
+      console.error('Full error response data:', JSON.stringify(error.response?.data, null, 2));
       
       const message = error.response?.data?.message || error.message || 'Login failed';
-      return rejectWithValue(message);
+      return rejectWithValue({
+        message,
+        status: error.response?.status,
+        fullError: error.response?.data
+      });
     }
   }
 );
