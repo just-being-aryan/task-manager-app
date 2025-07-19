@@ -11,9 +11,9 @@ const app = express();
 
 const corsOptions = {
   origin: [
-    'https://task-manager-app-iota-three.vercel.app', // Vercel frontend
-    'http://localhost:5173', // Optional: local dev
-  ],
+    process.env.CLIENT_URL, // Production frontend URL from env
+    'http://localhost:5173', // Local development
+  ].filter(Boolean), // Remove any undefined values
   credentials: true,
 };
 
