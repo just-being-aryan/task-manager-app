@@ -23,7 +23,27 @@ app.use(express.json());
 
 app.set('trust proxy', 1); 
 
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Task Manager API is running! 🚀',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
 
+app.get('/api', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Task Manager API v1.0 is running! 🚀',
+    endpoints: {
+      auth: '/api/auth (POST /login, POST /register)',
+      tasks: '/api/tasks (GET, POST, PUT, DELETE)'
+    },
+    timestamp: new Date().toISOString()
+  });
+});
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes

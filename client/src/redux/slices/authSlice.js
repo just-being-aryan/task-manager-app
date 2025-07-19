@@ -1,7 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Temporary fix for production URL
+let API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+// Fix missing protocol and /api path for production
+if (API_BASE_URL === 'task-manager-app-production-c403.up.railway.app') {
+  API_BASE_URL = 'https://task-manager-app-production-c403.up.railway.app/api';
+}
+
 console.log('API_BASE_URL:', API_BASE_URL);
 console.log('Environment variables:', import.meta.env);
 
