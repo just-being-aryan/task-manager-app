@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, clearError } from '../redux/slices/authSlice';
 import { addNotification } from '../redux/slices/uiSlice';
+import { useAuth } from '../context/AuthContext';
 
 
 export default function Login() {
@@ -12,6 +13,7 @@ export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
+  const { login } = useAuth(); // Add AuthContext login function
   
   const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
 
@@ -26,6 +28,9 @@ export default function Login() {
       }));
       
       if (loginUser.fulfilled.match(result)) {
+        // Update AuthContext as well
+        login(result.payload.token);
+        
         dispatch(addNotification({
           type: 'success',
           message: 'Login successful!',

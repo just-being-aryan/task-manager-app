@@ -91,14 +91,13 @@ export default function Register() {
 
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Full Name <span className="text-gray-400 text-xs">(optional)</span></label>
               <input
                 type="text"
                 name="fullName"
-                required
                 value={form.fullName}
                 onChange={handleChange}
-                placeholder="Enter your full name"
+                placeholder="Enter your full name (optional)"
                 disabled={isLoading}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 disabled:opacity-50"
               />
