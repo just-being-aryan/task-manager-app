@@ -2,19 +2,28 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+console.log('API_BASE_URL:', API_BASE_URL);
+console.log('Environment variables:', import.meta.env);
 
 
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async (credentials, { rejectWithValue }) => {
     try {
+      console.log('Attempting login to:', `${API_BASE_URL}/auth/login`);
       const response = await axios.post(`${API_BASE_URL}/auth/login`, credentials);
+      console.log('Login response:', response.data);
       const { token, user } = response.data;
      
       localStorage.setItem('token', token);
       
       return { token, user };
     } catch (error) {
+      console.error('Login error:', error);
+      console.error('Error response:', error.response);
+      console.error('Error status:', error.response?.status);
+      console.error('Error data:', error.response?.data);
+      
       const message = error.response?.data?.message || error.message || 'Login failed';
       return rejectWithValue(message);
     }
@@ -25,9 +34,17 @@ export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (userData, { rejectWithValue }) => {
     try {
+      console.log('Attempting registration to:', `${API_BASE_URL}/auth/register`);
+      console.log('Registration data:', userData);
       const response = await axios.post(`${API_BASE_URL}/auth/register`, userData);
+      console.log('Registration response:', response.data);
       return response.data;
     } catch (error) {
+      console.error('Registration error:', error);
+      console.error('Error response:', error.response);
+      console.error('Error status:', error.response?.status);
+      console.error('Error data:', error.response?.data);
+      
       const message = error.response?.data?.message || error.message || 'Registration failed';
       return rejectWithValue(message);
     }
