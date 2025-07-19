@@ -1,8 +1,17 @@
 import fs from 'fs';
 import path from 'path';
-import pool from './config/db.js'; 
+import { fileURLToPath } from 'url';
+import pool from './config/db.js';
 
-const schema = fs.readFileSync(path.join(process.cwd(), 'schema.sql'), 'utf8');
+// ✅ Get __dirname in ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ✅ Construct correct absolute path
+const schemaPath = path.join(__dirname, 'schema.sql');
+
+// ✅ Read and execute the schema
+const schema = fs.readFileSync(schemaPath, 'utf8');
 
 try {
   await pool.query(schema);
